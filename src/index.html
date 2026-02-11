@@ -341,7 +341,7 @@ function saveXML() {
             xml += `    <tooltip><![CDATA[${el.dataset.tooltip || ""}]]></tooltip>\n`;
             xml += `  </object>\n`;
         } else {
-            xml += `  <object type="${el.dataset.type}" x="${el.dataset.x}" y="${el.dataset.y}" />\n`;
+            xml += `  <object type="${el.dataset.type}" x="${el.dataset.x}" y="${el.dataset.y}" rotation="${selectedElement.dataset.rotation}" />\n`;
         }
     });
 
