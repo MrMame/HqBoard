@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Level Editor</title>
+
+<style>
+body {
+    font-family: Arial;
+    display: flex;
+    gap: 20px;
+}
+
+#tools {
+    width: 150px;
+    padding: 10px;
+    border: 2px solid #333;
+}
+
+.tool-item {
+    padding: 10px;
+    margin: 5px 0;
+    background: #ccc;
+    cursor: grab;
+    text-align: center;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(26, 30px);
+    grid-template-rows: repeat(19, 30px);
+    gap: 1px;
+    background: black;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background: white;
+    position: relative;
+}
+
+.placed {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: move;
+}
+</style>
+</head>
+
+<body>
+
+<div id="tools">
+    <h3>Tools</h3>
+    <div class="tool-item" draggable="true" data-type="sofa">Sofa</div>
+    <div class="tool-item" draggable="true" data-type="tisch">Tisch</div>
+    <div class="tool-item" draggable="true" data-type="gegner">Gegner</div>
+    <hr>
+    <button onclick="saveXML()">Speichern</button>
+    <input type="file" id="loadFile" accept=".xml">
+</div>
+
+<div id="board"></div>
+
+<script>
+const board = document.getElementById("board");
+const loadFile = document.getElementById("loadFile");
+
+let draggedType = null;
+let draggedElement = null;
+
+/* GRID ERSTELLEN */
+for (let y = 0; y < 19; y++) {
+    for (let x = 0; x < 26; x++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.x = x;
+        cell.dataset.y = y;
+
+        cell.addEventListener("dragover", e => e.preventDefault());
+
+        cell.addEventListener("drop", function(e) {
+            e.preventDefault();
+
+            if (draggedElement) {
+                this.appendChild(draggedElement);
+                draggedElement = null;
+                return;
+            }
+
+            if (!draggedType) return;
+
+            const item = createPlacedElement(draggedType);
+            this.appendChild(item);
+        });
+
+        board.appendChild(cell);
+    }
+}
+
+/* TOOL DRAG */
+document.querySelectorAll(".tool-item").forEach(item => {
+    item.addEventListener("dragstart", function() {
+        draggedType = this.dataset.type;
+    });
+});
+
+/* ELEMENT ERSTELLEN */
+function createPlacedElement(type) {
+    const el = document.createElement("div");
+    el.classList.add("placed");
+    el.draggable = true;
+    el.dataset.type = type;
+    el.textContent = type;
+
+    el.style.background = getColor(type);
+
+    el.addEventListener("dragstart", function() {
+        draggedElement = this;
+    });
+
+    el.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+        this.remove();
+    });
+
+    return el;
+}
+
+function getColor(type) {
+    switch(type) {
+        case "sofa": return "#6b9";
+        case "tisch": return "#c96";
+        case "gegner": return "#f66";
+        default: return "#ddd";
+    }
+}
+
+/* XML SPEICHERN */
+function saveXML() {
+    let xml = `<level>\n`;
+
+    document.querySelectorAll(".placed").forEach(el => {
+        const cell = el.parentElement;
+        const x = cell.dataset.x;
+        const y = cell.dataset.y;
+        const type = el.dataset.type;
+
+        xml += `  <object type="${type}" x="${x}" y="${y}" />\n`;
+    });
+
+    xml += `</level>`;
+
+    const blob = new Blob([xml], { type: "text/xml" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "level.xml";
+    a.click();
+}
+
+/* XML LADEN */
+loadFile.addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        loadXML(e.target.result);
+    };
+    reader.readAsText(file);
+});
+
+function loadXML(xmlText) {
+    document.querySelectorAll(".placed").forEach(el => el.remove());
+
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlText, "text/xml");
+    const objects = xml.getElementsByTagName("object");
+
+    for (let obj of objects) {
+        const type = obj.getAttribute("type");
+        const x = obj.getAttribute("x");
+        const y = obj.getAttribute("y");
+
+        const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+        if (cell) {
+            const el = createPlacedElement(type);
+            cell.appendChild(el);
+        }
+    }
+}
+</script>
+
+</body>
+</html>
