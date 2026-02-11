@@ -16,11 +16,9 @@ body {
     color: white;
     padding: 10px;
 }
-
 #menu button {
     padding: 5px 10px;
 }
-
 /* LAYOUT */
 #container {
     display: flex;
@@ -56,26 +54,27 @@ body {
     grid-template-rows: repeat(19, 28px);
     gap: 1px;
     background: black;
-    background-image: 'Heroquest_board.svg';
-    height:fit-content;
+    background-image: url('Heroquest_board.svg');
+    position: relative;
+    height: fit-content;
     width: fit-content;
 }
 
 .cell {
     width: 28px;
     height: 28px;
-    background: white;
-    position: relative;
 }
 
+/* PLACED ELEMENTS */
 .placed {
-    width: 100%;
-    height: 100%;
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
     cursor: move;
+    user-select: none;
+    background: #ccc;
 }
 
 .marker {
@@ -96,6 +95,7 @@ textarea {
     width: 100%;
     height: 100px;
 }
+
 </style>
 </head>
 
@@ -115,10 +115,8 @@ textarea {
 <div id="container">
     <div id="tools">
         <h3>Tools</h3>
-
-        <div class="tool-item" draggable="true" data-type="sofa">Sofa</div>
+        <div class="tool-item" draggable="true" data-type="sofa">Sofa (2x1)</div>
         <div class="tool-item" draggable="true" data-type="tisch">Tisch</div>
-        <div class="tool-item" draggable="true" data-type="gegner">Gegner</div>
 
         <hr>
         <h4>Marker</h4>
@@ -134,9 +132,14 @@ const markerTools = document.getElementById("markerTools");
 const loadFile = document.getElementById("loadFile");
 const descriptionText = document.getElementById("descriptionText");
 
+const CELL_SIZE = 28;
+const CELL_GAP = 1;
+const STEP = CELL_SIZE + CELL_GAP;
+
 let draggedType = null;
 let draggedLetter = null;
 let draggedElement = null;
+let selectedElement = null;
 
 /* DESCRIPTION TOGGLE */
 function toggleDescription() {
@@ -144,7 +147,8 @@ function toggleDescription() {
     panel.style.display = panel.style.display === "none" ? "block" : "none";
 }
 
-/* GRID */
+
+/* GRID ERZEUGEN */
 for (let y = 0; y < 19; y++) {
     for (let x = 0; x < 26; x++) {
         const cell = document.createElement("div");
@@ -158,7 +162,7 @@ for (let y = 0; y < 19; y++) {
             e.preventDefault();
 
             if (draggedElement) {
-                this.appendChild(draggedElement);
+                placeElement(draggedElement, x, y);
                 draggedElement = null;
                 return;
             }
@@ -166,11 +170,9 @@ for (let y = 0; y < 19; y++) {
             if (!draggedType) return;
 
             if (draggedType === "marker") {
-                const el = createMarker(draggedLetter);
-                this.appendChild(el);
+                placeElement(createMarker(draggedLetter), x, y);
             } else {
-                const el = createPlaced(draggedType);
-                this.appendChild(el);
+                placeElement(createPlaced(draggedType), x, y);
             }
         });
 
@@ -178,7 +180,15 @@ for (let y = 0; y < 19; y++) {
     }
 }
 
-/* MARKER A-Z ERSTELLEN */
+/* TOOL DRAG */
+document.querySelectorAll(".tool-item").forEach(item => {
+    item.addEventListener("dragstart", function() {
+        draggedType = this.dataset.type;
+        draggedLetter = this.dataset.letter;
+    });
+});
+
+/* MARKER A-Z */
 for (let i = 65; i <= 90; i++) {
     const letter = String.fromCharCode(i);
     const div = document.createElement("div");
@@ -196,44 +206,33 @@ for (let i = 65; i <= 90; i++) {
     markerTools.appendChild(div);
 }
 
-/* TOOL DRAG */
-document.querySelectorAll(".tool-item:not(.marker-tool)").forEach(item => {
-    item.addEventListener("dragstart", function() {
-        draggedType = this.dataset.type;
-    });
-});
+/* ELEMENT POSITIONIEREN */
+function placeElement(el, x, y) {
+    el.dataset.x = x;
+    el.dataset.y = y;
 
-/* NORMAL OBJEKT */
-function createPlaced(type) {
+    el.style.left = (x * STEP) + "px";
+    el.style.top = (y * STEP) + "px";
+
+    board.appendChild(el);
+}
+
+/* OBJEKT ERZEUGEN */
+function createPlaced(type, rotation = 0) {
+
     const el = document.createElement("div");
     el.className = "placed";
     el.draggable = true;
     el.dataset.type = type;
+    el.dataset.rotation = rotation;
     el.textContent = type;
-    el.style.background = "#ccc";
 
-    el.addEventListener("dragstart", function() {
-        draggedElement = this;
+    applySize(el);
+
+    el.addEventListener("click", e => {
+        e.stopPropagation();
+        selectElement(el);
     });
-
-    el.addEventListener("contextmenu", e => {
-        e.preventDefault();
-        el.remove();
-    });
-
-    return el;
-}
-
-/* MARKER */
-function createMarker(letter, tooltipText = "") {
-    const el = document.createElement("div");
-    el.className = "placed marker";
-    el.draggable = true;
-    el.dataset.type = "marker";
-    el.dataset.letter = letter;
-    el.dataset.tooltip = tooltipText;
-    el.textContent = letter;
-    el.title = tooltipText;
 
     el.addEventListener("dragstart", function() {
         draggedElement = this;
@@ -255,6 +254,77 @@ function createMarker(letter, tooltipText = "") {
     return el;
 }
 
+/* MARKER */
+function createMarker(letter) {
+
+    const el = document.createElement("div");
+    el.className = "placed marker";
+    el.draggable = true;
+    el.dataset.type = "marker";
+    el.dataset.rotation = 0;
+    el.textContent = letter;
+
+    el.style.width = CELL_SIZE + "px";
+    el.style.height = CELL_SIZE + "px";
+
+    el.addEventListener("click", e => {
+        e.stopPropagation();
+        selectElement(el);
+    });
+
+    el.addEventListener("dragstart", function() {
+        draggedElement = this;
+    });
+
+    el.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        el.remove();
+    });
+
+    return el;
+}
+
+/* AUSWAHL */
+function selectElement(el) {
+    if (selectedElement) selectedElement.style.outline = "none";
+    selectedElement = el;
+    selectedElement.style.outline = "2px solid red";
+}
+
+/* GRÖSSE + ROTATION */
+function applySize(el) {
+
+    const rotation = parseInt(el.dataset.rotation || 0);
+
+    if (el.dataset.type === "sofa") {
+
+        if (rotation % 180 === 0) {
+            el.style.width = (CELL_SIZE * 2 + CELL_GAP) + "px";
+            el.style.height = CELL_SIZE + "px";
+        } else {
+            el.style.width = CELL_SIZE + "px";
+            el.style.height = (CELL_SIZE * 2 + CELL_GAP) + "px";
+        }
+
+    } else {
+        el.style.width = CELL_SIZE + "px";
+        el.style.height = CELL_SIZE + "px";
+    }
+
+    //el.style.transform = `rotate(${rotation}deg)`;
+}
+
+/* ROTATION MIT R */
+document.addEventListener("keydown", function(e) {
+    if (e.key.toLowerCase() === "r" && selectedElement) {
+        let rot = parseInt(selectedElement.dataset.rotation || 0);
+        rot = (rot + 90) % 360;
+        selectedElement.dataset.rotation = rot;
+        applySize(selectedElement);
+    }
+});
+
+/* XML */
 /* XML SPEICHERN */
 function saveXML() {
     let xml = `<level>\n`;
@@ -267,11 +337,11 @@ function saveXML() {
         const y = cell.dataset.y;
 
         if (el.dataset.type === "marker") {
-            xml += `  <object type="marker" letter="${el.dataset.letter}" x="${x}" y="${y}">\n`;
+            xml += `  <object type="marker" letter="${el.dataset.letter}" x="${el.dataset.x}" y="${el.dataset.y}">\n`;
             xml += `    <tooltip><![CDATA[${el.dataset.tooltip || ""}]]></tooltip>\n`;
             xml += `  </object>\n`;
         } else {
-            xml += `  <object type="${el.dataset.type}" x="${x}" y="${y}" />\n`;
+            xml += `  <object type="${el.dataset.type}" x="${el.dataset.x}" y="${el.dataset.y}" />\n`;
         }
     });
 
