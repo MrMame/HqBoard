@@ -1,0 +1,18 @@
+<level>
+  <description><![CDATA[jhdjksah dkjahs kjdh kajsh dkjah skdhkashkda
+
+
+sakdj asld]]></description>
+  <object type="sofa" x="5" y="3" />
+  <object type="tisch" x="3" y="4" />
+  <object type="gegner" x="10" y="4" />
+  <object type="marker" letter="B" x="3" y="10">
+    <tooltip><![CDATA[]]></tooltip>
+  </object>
+  <object type="marker" letter="A" x="6" y="10">
+    <tooltip><![CDATA[jkah djkhak jdh kasdasdaksdklsaj djklsaj kldjsakl djlkasjdl ksaj dlkj salkdj lsakjd lksaj dlkj ljdsa lkdj lsakjd lkasj dklj salkdj laksj dlkasj dlkasjd lksaj d]]></tooltip>
+  </object>
+  <object type="marker" letter="A" x="9" y="10">
+    <tooltip><![CDATA[text A]]></tooltip>
+  </object>
+</level>

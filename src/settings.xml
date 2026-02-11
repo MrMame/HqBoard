@@ -1,5 +1,0 @@
-<level>
-  <object type="sofa" x="5" y="3" />
-  <object type="gegner" x="10" y="8" />
-  <object type="tisch" x="2" y="15" />
-</level>
