@@ -1,104 +1,104 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>HeroQuest Map Editor</title>
+    <meta charset="UTF-8">
+    <title>HeroQuest Map Editor</title>
+    <script defer src="./scripts/main.js"></script>
+    <style>
+    body {
+        font-family: Arial;
+        margin: 0;
+    }
 
-<style>
-body {
-    font-family: Arial;
-    margin: 0;
-}
+    /* MENU */
+    #menu {
+        background: #333;
+        color: white;
+        padding: 10px;
+    }
+    #menu button {
+        padding: 5px 10px;
+    }
+    /* LAYOUT */
+    #container {
+        display: flex;
+        gap: 20px;
+        padding: 10px;
+    }
 
-/* MENU */
-#menu {
-    background: #333;
-    color: white;
-    padding: 10px;
-}
-#menu button {
-    padding: 5px 10px;
-}
-/* LAYOUT */
-#container {
-    display: flex;
-    gap: 20px;
-    padding: 10px;
-}
+    /* TOOLBOX */
+    #tools {
+        width: 180px;
+        border: 2px solid #333;
+        padding: 10px;
+    }
 
-/* TOOLBOX */
-#tools {
-    width: 180px;
-    border: 2px solid #333;
-    padding: 10px;
-}
+    .tool-item {
+        padding: 6px;
+        margin: 4px 0;
+        background: #ccc;
+        cursor: grab;
+        text-align: center;
+    }
 
-.tool-item {
-    padding: 6px;
-    margin: 4px 0;
-    background: #ccc;
-    cursor: grab;
-    text-align: center;
-}
+    .marker-tool {
+        border-radius: 50%;
+        background: gold;
+        font-weight: bold;
+    }
 
-.marker-tool {
-    border-radius: 50%;
-    background: gold;
-    font-weight: bold;
-}
+    /* BOARD */
+    #board {
+        display: grid;
+        grid-template-columns: repeat(26, 28px);
+        grid-template-rows: repeat(19, 28px);
+        gap: 1px;
+        background: black;
+        background-image: url('Heroquest_board.svg');
+        position: relative;
+        height: fit-content;
+        width: fit-content;
+    }
 
-/* BOARD */
-#board {
-    display: grid;
-    grid-template-columns: repeat(26, 28px);
-    grid-template-rows: repeat(19, 28px);
-    gap: 1px;
-    background: black;
-    background-image: url('Heroquest_board.svg');
-    position: relative;
-    height: fit-content;
-    width: fit-content;
-}
+    .cell {
+        width: 28px;
+        height: 28px;
+    }
 
-.cell {
-    width: 28px;
-    height: 28px;
-}
+    /* PLACED ELEMENTS */
+    .placed {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        cursor: move;
+        user-select: none;
+        background: #ccc;
+    }
 
-/* PLACED ELEMENTS */
-.placed {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    cursor: move;
-    user-select: none;
-    background: #ccc;
-}
+    .marker {
+        border-radius: 50%;
+        background: gold;
+        font-weight: bold;
+    }
 
-.marker {
-    border-radius: 50%;
-    background: gold;
-    font-weight: bold;
-}
+    /* DESCRIPTION PANEL */
+    #descriptionPanel {
+        display: none;
+        padding: 10px;
+        background: #f4f4f4;
+        border-bottom: 2px solid #333;
+    }
 
-/* DESCRIPTION PANEL */
-#descriptionPanel {
-    display: none;
-    padding: 10px;
-    background: #f4f4f4;
-    border-bottom: 2px solid #333;
-}
+    textarea {
+        
+        width: 100%;
+        height: 100px;
+    }
 
-textarea {
-    width: 100%;
-    height: 100px;
-}
-
-</style>
+    </style>
 </head>
-
 <body>
 
 <div id="menu">
