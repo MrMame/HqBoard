@@ -8,5 +8,5 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "sourceMap":true
   },
-  "include":["./src/scripts/*.ts"]
+  "include":["./src/scripts/**/*.ts"]
 }
