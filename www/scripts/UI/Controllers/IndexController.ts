@@ -18,12 +18,12 @@ export class IndexController{
     }
 
     public initUI(){
-         this._uiDrawer.drawBoard(this._board);
+         this._uiDrawer.drawCompleteUI(this._board);
     }
 
     public async loadBoardFile(file:File){
         this._board = await this._boardStorageService.loadBoardFromFile(file);
-        this._uiDrawer.drawBoard(this._board);
+        this._uiDrawer.drawCompleteUI(this._board);
     }
     public saveBoard(){
         if(this._board===null)return;

@@ -24,10 +24,10 @@ const __indexController:IndexController = new IndexController(__boardStorageServ
 
 const CELL_SIZE = 28;
 const CELL_GAP = 1;
-const STEP = CELL_SIZE + CELL_GAP;
+// const STEP = CELL_SIZE + CELL_GAP;
 
-let draggedType         :any = null;
-let draggedLetter       :any = null;
+// let draggedType         :any = null;
+// let draggedLetter       :any = null;
 // let draggedElement      :any = null;
 let selectedElement     :any = null;
 
@@ -72,33 +72,33 @@ let selectedElement     :any = null;
 //     }
 // }
 
-/* TOOL DRAG */
-document.querySelectorAll(".tool-item").forEach(item => {
-    item.addEventListener("dragstart", function(event) {
-        const dragged : HTMLElement = event.currentTarget as HTMLElement;
-        draggedType = dragged.dataset.type;
-        draggedLetter = dragged.dataset.letter;
-    });
-});
+// /* TOOL DRAG */
+// document.querySelectorAll(".tool-item").forEach(item => {
+//     item.addEventListener("dragstart", function(event) {
+//         const dragged : HTMLElement = event.currentTarget as HTMLElement;
+//         draggedType = dragged.dataset.type;
+//         draggedLetter = dragged.dataset.letter;
+//     });
+// });
 
-/* MARKER A-Z */
-for (let i = 65; i <= 90; i++) {
-    const letter = String.fromCharCode(i);
-    const div = document.createElement("div");
-    div.className = "tool-item marker-tool";
-    div.textContent = letter;
-    div.draggable = true;
-    div.dataset.type = "marker";
-    div.dataset.letter = letter;
+// /* MARKER A-Z */
+// for (let i = 65; i <= 90; i++) {
+//     const letter = String.fromCharCode(i);
+//     const div = document.createElement("div");
+//     div.className = "tool-item marker-tool";
+//     div.textContent = letter;
+//     div.draggable = true;
+//     div.dataset.type = "marker";
+//     div.dataset.letter = letter;
 
-    div.addEventListener("dragstart", function() {
-        draggedType = "marker";
-        draggedLetter = letter;
-    });
+//     div.addEventListener("dragstart", function() {
+//         draggedType = "marker";
+//         draggedLetter = letter;
+//     });
 
-    if(markerTools===null){ throw new Error("No marker Tools existing!"); }
-    markerTools.appendChild(div);
-}
+//     if(markerTools===null){ throw new Error("No marker Tools existing!"); }
+//     markerTools.appendChild(div);
+// }
 
 // /* ELEMENT POSITIONIEREN */
 // function placeElement(el:any, x:any, y:any) {
