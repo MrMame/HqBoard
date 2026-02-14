@@ -11,6 +11,10 @@
 *.sln.docstates
 *.env
 
+*.js
+*.js.map
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -416,3 +420,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+

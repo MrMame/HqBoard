@@ -1,15 +1,26 @@
-import { BoardStorageService } from "./Domain/BoardStorageService";
+import { BoardStorageService } from "./Application/Services/BoardStorageService.js";
+import { Board } from "./Domain/Models/Board.js";
+import { IndexController } from "./UI/Controllers/IndexController.js";
+import { UiDrawer } from "./UI/Drawers/UiDrawer.js";
 
-const board = document.getElementById("board");
+// const board = document.getElementById("board");
 const markerTools = document.getElementById("markerTools");
-const loadFile :null|HTMLInputElement= document.getElementById("loadFile") as HTMLInputElement;
+const loadFileInputElement :null|HTMLInputElement= document.getElementById("loadFile") as HTMLInputElement;
+const elButtonSaveBoard :null|HTMLButtonElement= document.getElementById("saveBoard") as HTMLButtonElement;
 
 
-let boardStorageService : BoardStorageService;
 
 
+
+let __boardStorageService : BoardStorageService;
 // Service INIT
-boardStorageService = new BoardStorageService();
+__boardStorageService = new BoardStorageService();
+const __indexController:IndexController = new IndexController(__boardStorageService);
+
+
+
+
+
 
 const CELL_SIZE = 28;
 const CELL_GAP = 1;
@@ -17,49 +28,49 @@ const STEP = CELL_SIZE + CELL_GAP;
 
 let draggedType         :any = null;
 let draggedLetter       :any = null;
-let draggedElement      :any = null;
+// let draggedElement      :any = null;
 let selectedElement     :any = null;
 
-/* DESCRIPTION TOGGLE */
-function toggleDescription() {
-    const panel = document.getElementById("descriptionPanel");
-    if(panel===null){ throw new Error("No Description Panel existing!"); }
-    panel.style.display = panel.style.display === "none" ? "block" : "none";
-}
+// /* DESCRIPTION TOGGLE */
+// function toggleDescription() {
+//     const panel = document.getElementById("descriptionPanel");
+//     if(panel===null){ throw new Error("No Description Panel existing!"); }
+//     panel.style.display = panel.style.display === "none" ? "block" : "none";
+// }
 
 
-/* GRID ERZEUGEN */
-for (let y = 0; y < 19; y++) {
-    for (let x = 0; x < 26; x++) {
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        cell.dataset.x = String(x);
-        cell.dataset.y = String(y);
+// /* GRID ERZEUGEN */
+// for (let y = 0; y < 19; y++) {
+//     for (let x = 0; x < 26; x++) {
+//         const cell = document.createElement("div");
+//         cell.classList.add("cell");
+//         cell.dataset.x = String(x);
+//         cell.dataset.y = String(y);
 
-        cell.addEventListener("dragover", e => e.preventDefault());
+//         cell.addEventListener("dragover", e => e.preventDefault());
 
-        cell.addEventListener("drop", function(e) {
-            e.preventDefault();
+//         cell.addEventListener("drop", function(e) {
+//             e.preventDefault();
 
-            if (draggedElement) {
-                placeElement(draggedElement, x, y);
-                draggedElement = null;
-                return;
-            }
+//             if (draggedElement) {
+//                 placeElement(draggedElement, x, y);
+//                 draggedElement = null;
+//                 return;
+//             }
 
-            if (!draggedType) return;
+//             if (!draggedType) return;
 
-            if (draggedType === "marker") {
-                placeElement(createMarker(draggedLetter), x, y);
-            } else {
-                placeElement(createPlaced(draggedType), x, y);
-            }
-        });
+//             if (draggedType === "marker") {
+//                 placeElement(createMarker(draggedLetter), x, y);
+//             } else {
+//                 placeElement(createPlaced(draggedType), x, y);
+//             }
+//         });
 
-        if(board===null){ throw new Error("No Board existing!"); }
-        board.appendChild(cell);
-    }
-}
+//         if(board===null){ throw new Error("No Board existing!"); }
+//         board.appendChild(cell);
+//     }
+// }
 
 /* TOOL DRAG */
 document.querySelectorAll(".tool-item").forEach(item => {
@@ -89,92 +100,92 @@ for (let i = 65; i <= 90; i++) {
     markerTools.appendChild(div);
 }
 
-/* ELEMENT POSITIONIEREN */
-function placeElement(el:any, x:any, y:any) {
-    el.dataset.x = x;
-    el.dataset.y = y;
+// /* ELEMENT POSITIONIEREN */
+// function placeElement(el:any, x:any, y:any) {
+//     el.dataset.x = x;
+//     el.dataset.y = y;
 
-    el.style.left = (x * STEP) + "px";
-    el.style.top = (y * STEP) + "px";
+//     el.style.left = (x * STEP) + "px";
+//     el.style.top = (y * STEP) + "px";
 
-    if(board===null){ throw new Error("No Board existing!"); }
-    board.appendChild(el);
-}
+//     if(board===null){ throw new Error("No Board existing!"); }
+//     board.appendChild(el);
+// }
 
 /* OBJEKT ERZEUGEN */
-function createPlaced(type:any, rotation = 0) {
+// function createPlaced(type:any, rotation = 0) {
 
-    const el = document.createElement("div");
-    el.className = "placed";
-    el.draggable = true;
-    el.dataset.type = type;
-    el.dataset.rotation = String(rotation);
-    el.textContent = type;
+//     const el = document.createElement("div");
+//     el.className = "placed";
+//     el.draggable = true;
+//     el.dataset.type = type;
+//     el.dataset.rotation = String(rotation);
+//     el.textContent = type;
 
-    applySize(el);
+//     applySize(el);
 
-    el.addEventListener("click", e => {
-        e.stopPropagation();
-        selectElement(el);
-    });
+//     el.addEventListener("click", e => {
+//         e.stopPropagation();
+//         selectElement(el);
+//     });
 
-    el.addEventListener("dragstart", function() {
-        draggedElement = this;
-    });
+//     el.addEventListener("dragstart", function() {
+//         draggedElement = this;
+//     });
 
-    el.addEventListener("dblclick", function() {
-        const text = prompt("Tooltip Text bearbeiten:", el.dataset.tooltip || "");
-        if (text !== null) {
-            el.dataset.tooltip = text;
-            el.title = text;
-        }
-    });
+//     el.addEventListener("dblclick", function() {
+//         const text = prompt("Tooltip Text bearbeiten:", el.dataset.tooltip || "");
+//         if (text !== null) {
+//             el.dataset.tooltip = text;
+//             el.title = text;
+//         }
+//     });
 
-    el.addEventListener("contextmenu", e => {
-        e.preventDefault();
-        el.remove();
-    });
+//     el.addEventListener("contextmenu", e => {
+//         e.preventDefault();
+//         el.remove();
+//     });
 
-    return el;
-}
+//     return el;
+// }
 
-/* MARKER */
-function createMarker(letter:any) {
+// /* MARKER */
+// function createMarker(letter:any) {
 
 
-    const el = document.createElement("div");
-    el.className = "placed marker";
-    el.draggable = true;
-    el.dataset.type = "marker";
-    el.dataset.rotation = String(0);
-    el.textContent = letter;
+//     const el = document.createElement("div");
+//     el.className = "placed marker";
+//     el.draggable = true;
+//     el.dataset.type = "marker";
+//     el.dataset.rotation = String(0);
+//     el.textContent = letter;
 
-    el.style.width = CELL_SIZE + "px";
-    el.style.height = CELL_SIZE + "px";
+//     el.style.width = CELL_SIZE + "px";
+//     el.style.height = CELL_SIZE + "px";
 
-    el.addEventListener("click", e => {
-        e.stopPropagation();
-        selectElement(el);
-    });
+//     el.addEventListener("click", e => {
+//         e.stopPropagation();
+//         selectElement(el);
+//     });
 
-    el.addEventListener("dragstart", function() {
-        draggedElement = this;
-    });
+//     el.addEventListener("dragstart", function() {
+//         draggedElement = this;
+//     });
 
-    el.addEventListener("contextmenu", e => {
-        e.preventDefault();
-        el.remove();
-    });
+//     el.addEventListener("contextmenu", e => {
+//         e.preventDefault();
+//         el.remove();
+//     });
 
-    return el;
-}
+//     return el;
+// }
 
-/* AUSWAHL */
-function selectElement(el:any) {
-    if (selectedElement) selectedElement.style.outline = "none";
-    selectedElement = el;
-    selectedElement.style.outline = "2px solid red";
-}
+// /* AUSWAHL */
+// function selectElement(el:any) {
+//     if (selectedElement) selectedElement.style.outline = "none";
+//     selectedElement = el;
+//     selectedElement.style.outline = "2px solid red";
+// }
 
 /* GRÖSSE + ROTATION */
 function applySize(el:any) {
@@ -241,13 +252,28 @@ document.addEventListener("keydown", function(e) {
 //     a.click();
 // }
 
-/* XML LADEN */
-loadFile.addEventListener("change", function() {
-    if(this===null || this.files===null) return;
-    const file = this.files[0];
+let onDOMContentLoadedEventHandler = (event:Event) =>{
+    __indexController.initUI();
+}
+
+let onLoadFileInputElementChangeEventHandler = (ev:Event)=>{
+    const input = ev.target as HTMLInputElement;
+    if (!input || !input.files) return;
+    const file = input.files[0];
     if (!file) return;
-    boardStorageService.loadXML(file);
-});
+    __indexController.loadBoardFile(file);
+    
+}
+let onSaveBoardButtonClickEventHandler = (ev:Event)=>{
+    __indexController.saveBoard();
+}
+
+/* XML LADEN */
+loadFileInputElement.addEventListener("change", onLoadFileInputElementChangeEventHandler)
+elButtonSaveBoard.addEventListener("click",onSaveBoardButtonClickEventHandler);
+document.addEventListener("DOMContentLoaded", onDOMContentLoadedEventHandler)
+
+
 
 // function loadXML(xmlText:any) {
 //     document.querySelectorAll(".placed").forEach(el => el.remove());

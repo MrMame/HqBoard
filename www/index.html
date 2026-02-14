@@ -3,15 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <title>HeroQuest Map Editor</title>
-        <script defer src="./scripts/main.js"></script>
+        <script defer type="module" src="./scripts/main.js"></script>
         <link rel="stylesheet" href="styles/main.css">
     </head>
     <body>
 
         <div id="menu">
             <button onclick="toggleDescription()">Abenteuerbeschreibung</button>
-            <button onclick="boardStorageService.saveXML()">Speichern</button>
-            <input type="file" id="loadFile" accept=".xml">
+            <button id="saveBoard" >Speichern</button>
+            <input id="loadFile" type="file"  accept=".xml" >
         </div>
 
         <div id="descriptionPanel">
@@ -28,6 +28,12 @@
                 <hr>
                 <h4>Marker</h4>
                 <div id="markerTools"></div>
+                <div class="tool-item marker-tool" draggable="true" data-type="marker" data-letter>A</div>
+                <div class="tool-item marker-tool" draggable="true" data-type="marker" data-letter>B</div>
+                <div class="tool-item marker-tool" draggable="true" data-type="marker" data-letter>C</div>
+                <div class="tool-item marker-tool" draggable="true" data-type="marker" data-letter>D</div>
+
+
             </div>
 
             <div id="board"></div>
