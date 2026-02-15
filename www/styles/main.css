@@ -41,7 +41,7 @@
     }
 
     /* BOARD */
-    #board {
+    #board #grid{
         display: grid;
         grid-template-columns: repeat(26, 28px);
         grid-template-rows: repeat(19, 28px);

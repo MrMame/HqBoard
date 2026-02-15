@@ -1,4 +1,4 @@
-import { HtmlElementFactory } from "../../UI/Factories/HtmlElementFactory.js";
+import { HtmlElementFactory } from "../../UI/Factories/OBSOLED_HtmlElementFactory.js";
 import { Board } from "../../Domain/Models/Board.js";
 import { BoardObject } from "../../Domain/Models/BoardObject.js";
 
