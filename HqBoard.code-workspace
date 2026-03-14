@@ -3,5 +3,19 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch Chrome",
+				"request": "launch",
+				"type": "chrome",
+				"url": "http://localhost:5500/www",
+				"webRoot": "${workspaceFolder}/www",
+				"sourceMaps": true
+			}
+
+		]
+	}
 }

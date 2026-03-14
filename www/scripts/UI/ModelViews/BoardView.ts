@@ -1,4 +1,6 @@
-import { TileView } from "./TileView";
+import { Board } from "../../Domain/Models/Board.js";
+import { TileViewFactory } from "../Factories/TileViewFactory.js";
+import { TileView } from "./TileView.js";
 
 export class BoardView{
 
@@ -6,13 +8,21 @@ export class BoardView{
     public static BOARD_SQUARE_WIDTH:number = 26;
 
     private tiles:TileView[][];
+
     
     public htmlElement : HTMLElement;
-    
-    constructor(tiles:TileView[][]){
-        this.tiles = tiles;
+    private _board:Board;
+
+
+    constructor(board:Board){
+        this._board = board;
+        this.tiles = TileViewFactory.createTileViewsFromTiles(board.tiles);
         this.htmlElement = this._createHtmlElement();
     }
+
+    public getBoard(){
+        return this._board;
+    };
 
      private _createHtmlElement():HTMLElement{
         let elGrid:HTMLElement= document.createElement("div")

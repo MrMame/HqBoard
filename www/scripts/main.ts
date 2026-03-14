@@ -1,7 +1,5 @@
 import { BoardStorageService } from "./Application/Services/BoardStorageService.js";
-import { Board } from "./Domain/Models/Board.js";
 import { IndexController } from "./UI/Controllers/IndexController.js";
-import { UiDrawer } from "./UI/Drawers/UiDrawer.js";
 
 // const board = document.getElementById("board");
 const markerTools = document.getElementById("markerTools");

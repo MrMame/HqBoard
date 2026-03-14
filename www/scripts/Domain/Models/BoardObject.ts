@@ -1,14 +1,14 @@
-export class BoardObject{
-    public posX : number = -1;
-    public posY : number = -1;
-    public type : undefined | string = undefined;
-    public htmlElement : null |HTMLElement = null
+import { Tile } from "./Tile";
 
-    constructor(type:string,posX:number,posY:number,htmlElement:HTMLElement){
+export class BoardObject{
+    public type : undefined | string = undefined;
+    public standsOnTile : Tile | null = null;
+
+
+    constructor(type:string,targetTile:Tile | null){
         this.type = type;
-        this.posX = posX;
-        this.posY = posY;
-        this.htmlElement = htmlElement;
     }
+
+
 
 }
