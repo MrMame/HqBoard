@@ -1,3 +1,5 @@
+import { Tile } from "../../Domain/Models/Tile.js";
+
 export class TileView{
 
     private CLASSNAME_CELL_ELEMENT : string = "cell";
@@ -6,9 +8,14 @@ export class TileView{
     public x:number;
     public y:number;
 
-    constructor(x:number,y:number){
-        this.x=x;
-        this.y=y;
+    // public constructor(x:number,y:number){
+    //     this.x=x;
+    //     this.y=y;
+    //     this.htmlElement = this._createHtmlElement();
+    // }
+    public constructor(tile:Tile){
+        this.x=tile.posX;
+        this.y=tile.posY;
         this.htmlElement = this._createHtmlElement();
     }
 

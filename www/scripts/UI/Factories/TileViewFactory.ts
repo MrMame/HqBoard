@@ -3,10 +3,11 @@ import { TileView } from "../ModelViews/TileView.js";
 
 export class TileViewFactory{
     public static createTileView(x:number,y:number):TileView{
-        return new TileView(x,y);
+        let newTile = new Tile(x,y);
+        return this.createTileViewFromTile(newTile);
     }
     public static createTileViewFromTile(tile:Tile):TileView{
-        return new TileView(tile.posX,tile.posY);
+        return new TileView(tile);
     }
     public static createTileViewsFromTiles(tiles:Tile[][]):TileView[][]{
         let tileViews:TileView[][] = [];
