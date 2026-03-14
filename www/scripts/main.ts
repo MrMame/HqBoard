@@ -5,7 +5,7 @@ import { IndexController } from "./UI/Controllers/IndexController.js";
 const markerTools = document.getElementById("markerTools");
 const loadFileInputElement :null|HTMLInputElement= document.getElementById("loadFile") as HTMLInputElement;
 const elButtonSaveBoard :null|HTMLButtonElement= document.getElementById("saveBoard") as HTMLButtonElement;
-
+const elBoard :null|HTMLDivElement = document.getElementById("board") as HTMLDivElement;
 
 
 
@@ -266,9 +266,22 @@ let onSaveBoardButtonClickEventHandler = (ev:Event)=>{
     __indexController.saveBoard();
 }
 
+let onItemDroppedOnBoardEventHandler = (ev:any)=>{
+    ev.preventDefault();
+    const dataTransfer : DataTransfer = ev as DataTransfer;
+    console.log(dataTransfer);
+    const id = ev.dataTransfer.getData("text/plain");
+    const draggedElement = document.querySelector(`[data-id="${id}"]`) as HTMLElement;
+    console.log(draggedElement);
+
+    __indexController.dropToolboxObjectOnBoard(ev.clientX, ev.clientY, draggedElement);
+}   
+
 /* XML LADEN */
 loadFileInputElement.addEventListener("change", onLoadFileInputElementChangeEventHandler)
 elButtonSaveBoard.addEventListener("click",onSaveBoardButtonClickEventHandler);
+elBoard.addEventListener("drop", onItemDroppedOnBoardEventHandler);
+elBoard.addEventListener("dragover", (e) => e.preventDefault());
 document.addEventListener("DOMContentLoaded", onDOMContentLoadedEventHandler)
 
 

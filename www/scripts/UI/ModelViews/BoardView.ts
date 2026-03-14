@@ -7,7 +7,7 @@ export class BoardView{
     public static BOARD_SQUARE_HEIGHT:number = 19;
     public static BOARD_SQUARE_WIDTH:number = 26;
 
-    private tiles:TileView[][];
+    public tiles:TileView[][];
 
     
     public htmlElement : HTMLElement;

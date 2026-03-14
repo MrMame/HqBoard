@@ -26,23 +26,23 @@ export class TileView{
         htmlElement.dataset.x = String(this.x);
         htmlElement.dataset.y = String(this.y);
 
-        htmlElement.addEventListener("dragover", this._onCellDragoverEventHandler);
-        htmlElement.addEventListener("drop", this._onCellDroppedEventHandler);
+        // htmlElement.addEventListener("dragover", this._onCellDragoverEventHandler);
+        // htmlElement.addEventListener("drop", this._onCellDroppedEventHandler);
         return htmlElement;
 
     }
 
-     private _onCellDragoverEventHandler = (e:Event)=>{
-        e.preventDefault();
-    }
-    private _onCellDroppedEventHandler = (event:any)=>{
-        event.preventDefault();
-        const dataTransfer : DataTransfer = event as DataTransfer;
-        console.log(dataTransfer);
-        const id = event.dataTransfer.getData("text/plain");
-        const draggedElement = document.querySelector(`[data-id="${id}"]`);
-        console.log(draggedElement);
-    }
+    // private _onCellDragoverEventHandler = (e:Event)=>{
+    //     e.preventDefault();
+    // }
+    // private _onCellDroppedEventHandler = (event:any)=>{
+    //     event.preventDefault();
+    //     const dataTransfer : DataTransfer = event as DataTransfer;
+    //     console.log(dataTransfer);
+    //     const id = event.dataTransfer.getData("text/plain");
+    //     const draggedElement = document.querySelector(`[data-id="${id}"]`);
+    //     console.log(draggedElement);
+    // }
 
 
 }
