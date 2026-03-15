@@ -1,13 +1,13 @@
 import { BoardObject } from "./BoardObject";
 
 export class Tile{
-    public posX:number;
-    public posY:number
-    BoardObjectsOnTile:BoardObject[] = [];
+    public posCol:number;
+    public posRow:number
+    public BoardObjectsOnTile:BoardObject[] = [];
 
-    constructor(posX:number,posY:number){
-        this.posX = posX;
-        this.posY = posY;
+    constructor(posCol:number,posRow:number){
+        this.posCol = posCol;
+        this.posRow = posRow;
     }
 
     public addBoardObject(newBoardObject:BoardObject){

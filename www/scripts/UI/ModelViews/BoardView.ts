@@ -7,7 +7,7 @@ export class BoardView{
     public static BOARD_SQUARE_HEIGHT:number = 19;
     public static BOARD_SQUARE_WIDTH:number = 26;
 
-    public tiles:TileView[][];
+    public tileViews:TileView[][];
 
     
     public htmlElement : HTMLElement;
@@ -16,7 +16,7 @@ export class BoardView{
 
     constructor(board:Board){
         this._board = board;
-        this.tiles = TileViewFactory.createTileViewsFromTiles(board.tiles);
+        this.tileViews = TileViewFactory.createTileViewsFromBoard(board);
         this.htmlElement = this._createHtmlElement();
     }
 
@@ -27,12 +27,12 @@ export class BoardView{
      private _createHtmlElement():HTMLElement{
         let elGrid:HTMLElement= document.createElement("div")
         elGrid.id = "grid";
-        for (let y = 0; y < BoardView.BOARD_SQUARE_HEIGHT; y++) {
-            for (let x = 0; x < BoardView.BOARD_SQUARE_WIDTH; x++) {
-                let elTile:HTMLElement = this.tiles[x][y].htmlElement;
-                elGrid.appendChild(elTile);
-            }
-        }
+        this.tileViews.forEach(row => {
+            row.forEach(tileView => {
+                console.log(`Creating HTML element for tile at position ${tileView.getPosCol()}, ${tileView.getPosRow()}`);
+                elGrid.appendChild(tileView.htmlElement);
+            });
+        });
         return elGrid;
     }
 }
